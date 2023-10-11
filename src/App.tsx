@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { NewNote, NoteList } from "./components";
+import { NewNote, Note, NoteLayout, NoteList } from "./components";
 import { NoteDataType, RawNoteType, TagType } from "./types";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useMemo } from "react";
@@ -49,8 +49,8 @@ function App() {
             />
           }
         />
-        <Route path="/:id" element={<h1>Note</h1>}>
-          <Route index element={<h1>Show</h1>} />
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+          <Route index element={<Note />} />
           <Route path="edit" element={<h1>Edit</h1>} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
