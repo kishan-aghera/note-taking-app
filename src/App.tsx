@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { NewNote, Note, NoteLayout, NoteList } from "./components";
+import { EditNote, NewNote, Note, NoteLayout, NoteList } from "./components";
 import { NoteDataType, RawNoteType, TagType } from "./types";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { useMemo } from "react";
@@ -28,6 +28,18 @@ function App() {
     });
   };
 
+  const onUpdateNote = (id: string, { tags, ...data }: NoteDataType) => {
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+        } else {
+          return note;
+        }
+      });
+    });
+  };
+
   const addTag = (tag: TagType) => {
     setTags((prev) => [...prev, tag]);
   };
@@ -51,7 +63,16 @@ function App() {
         />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
           <Route index element={<Note />} />
-          <Route path="edit" element={<h1>Edit</h1>} />
+          <Route
+            path="edit"
+            element={
+              <EditNote
+                onSubmit={onUpdateNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
